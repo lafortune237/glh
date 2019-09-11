@@ -20,8 +20,4 @@ class Category extends Model
         'name'
     ];
 
-    public function types()
-    {
-        return $this->hasMany(Type::class);
-    }
 }
