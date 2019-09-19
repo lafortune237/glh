@@ -26,45 +26,83 @@
         <div class="card-body register-card-body">
             <p class="login-box-msg">Inscription</p>
 
-            <form action="../../index.html" method="post">
+            <form action="{{route('register')}}" method="post">
+                @csrf
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Nom">
+                    <input required name="name" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Votre nom">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-user"></span>
                         </div>
                     </div>
+                    @error('name')
+                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
+                </div>
+
+                <div class="input-group mb-3">
+                    <input required name="surname" type="text" class="form-control @error('surname') is-invalid @enderror" placeholder="Votre prénom">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                    @error('surname')
+                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
                 </div>
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Email">
+                    <input required type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="example@xyz.com">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
                         </div>
                     </div>
+
+                    @error('email')
+                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="Mot de passe">
+                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Mot de passe">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
                         </div>
                     </div>
+
+                    @error('password')
+                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="confirmation">
+                    <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="confirmation du mot de passe">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
                         </div>
                     </div>
+
+                    @error('password_confirmation')
+                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
                 </div>
                 <div class="row">
                     <div class="col-8">
                         <div class="icheck-primary">
                             <input type="checkbox" id="agreeTerms" name="terms" value="agree">
                             <label for="agreeTerms">
-                                I agree to the <a href="#">terms</a>
+                                J'accepte <a href="#0">les termes et conditions</a>
                             </label>
                         </div>
                     </div>
@@ -88,7 +126,9 @@
                 </a>
             </div>-->
 
-            <a href="login.html" class="text-center">J'ai dejà un compte</a>
+            <p class="mb-0">
+                Vous avez déja un compte ? <a href="{{ route('login') }}" class="text-center">Se connecter</a>
+            </p>
         </div>
         <!-- /.form-box -->
     </div><!-- /.card -->

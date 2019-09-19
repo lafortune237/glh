@@ -18,7 +18,7 @@
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
-<body style="background-image: url(img/even-hotels-eugene-5405616297-4x3.jpg)" class="hold-transition login-page">
+<body style="background-image: url(/img/even-hotels-eugene-5405616297-4x3.jpg)" class="hold-transition login-page">
 <div class="login-box">
     <!-- /.login-logo -->
     <div class="card">
@@ -28,7 +28,7 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="input-group mb-3">
-                    <input name="email" type="email" class="form-control" placeholder="Email">
+                    <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -42,7 +42,7 @@
                     @enderror
                 </div>
                 <div class="input-group mb-3">
-                    <input name="password" type="password" class="form-control" placeholder="Mot de passe">
+                    <input name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Mot de passe">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Hostel;
+use App\Room;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -13,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth')->except("index");
     }
 
     /**
@@ -23,6 +25,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $hostels = Hostel::has('rooms')
+            ->where(['verified'=>Hostel::VERIFIED_HOSTEL])
+            ->orderBy('nbr_rental','desc')
+            ->take(15)
+            ->get();
+
+        return view('home')->with(['hostels'=>$hostels]);
     }
 }

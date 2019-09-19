@@ -16,26 +16,8 @@ class User extends Authenticatable
     const VERIFIED_USER = '1';
     const UNVERIFIED_USER = '0';
 
-    const DRIVER_LICENSES = array(
-        'B',
-        'B1',
-        'B',
-        'BE',
-        'C1',
-        'C1E',
-        'C',
-        'CE',
-        'D1',
-        'D1E',
-        'D',
-        'DE'
-    );
-
-    const IDENTITY_TYPES = [
-        "Carte d'identité",
-        "Carte de résidence",
-        "Passport"
-    ];
+    const ADMIN_USER = 'true';
+    const REGULAR_USER = 'false';
 
     /**
      * The attributes that are mass assignable.
@@ -51,30 +33,15 @@ class User extends Authenticatable
         'photo',
         'birth_place',
         'address',
-        'postal_code',
         'tel',
         'town',
         'country',
-        'about',
         'verified',
+        'admin',
         'verification_token',
-
-        'license',
-        'license_type',
-        'license_image',
-        'license_date_start',
-        'license_date_end',
-        'license_place',
-        'licence_experience_date',
-        'identity_type',
-        'identity_nbr',
-        'identity_place',
-        'twitter',
-        'linkedin',
-        'youtube',
-        'payment_account_owner',
         'iban_nbr',
         'nbr_rental',
+        'email_verified_at',
     ];
 
     protected $appends = [
@@ -93,6 +60,10 @@ class User extends Authenticatable
         'verification_token',
     ];
 
+    public function isAdmin()
+    {
+        return $this->admin == User::ADMIN_USER;
+    }
 
     public function getFullNameAttribute()
     {
@@ -112,6 +83,21 @@ class User extends Authenticatable
     public function getSurnameAttribute($surname)
     {
         return ucfirst($surname);
+    }
+
+    public function getPhotoAttribute($photo)
+    {
+        if($photo == '' || $photo == ' ' || $photo == null){
+            return url(config('images.userAvatar'));
+        }
+        if(strpos($photo,'facebook') == true || strpos($photo,'google') == true || strpos($photo,'lorempixel') == true){
+            return $photo;
+
+        }
+
+        return url("uploads/{$photo}");
+
+        //return url(config('images.userAvatar'));
     }
 
 
@@ -143,29 +129,19 @@ class User extends Authenticatable
         return Str::random(40);
     }
 
-    public function linkedSocialAccounts()
+    public function hostels()
     {
-        return $this->hasMany(LinkedSocialAccount::class);
+        return $this->hasMany(Hostel::class);
     }
 
-    public function messages()
+    public function selections()
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Selection::class);
     }
 
-    public function products()
+    public function reservations()
     {
-        return $this->hasMany(Product::class);
-    }
-
-    public function driver()
-    {
-        return $this->hasOne(Hostel::class);
-    }
-
-    public function cars()
-    {
-        return $this->hasMany(Room::class);
+        return $this->hasMany(Reservation::class);
     }
 
 
