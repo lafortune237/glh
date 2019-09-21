@@ -1,0 +1,17 @@
+.toast{
+
+    opacity: 1 !important;
+    font-weight: bold;
+
+}
+
+.toast-top-center {
+     margin-top: 80px;
+ }
+
+
+.img-upload{
+
+    width: 250px;
+    max-height: 162px
+}

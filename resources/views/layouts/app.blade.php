@@ -9,190 +9,279 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>AdminLTE 3 | Starter</title>
+    <title>GLH | @yield('title')</title>
 
+@section('css')
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="assets/plugins/fontawesome-free/css/all.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="assets/dist/css/adminlte.min.css">
-    <!-- Google Font: Source Sans Pro -->
+        <link rel="stylesheet" href="/assets/plugins/fontawesome-free/css/all.min.css">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="/assets/dist/css/adminlte.min.css">
+        <link rel="stylesheet" href="/assets/dist/css/custom.css">
+        <link rel="stylesheet" href="/assets/css/custom.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+        <style>
+            @yield('custom-css')
+
+        </style>
+
+@show
+<!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
-<body class="@auth hold-transition sidebar-mini @endauth " style=" @guest margin-left:-259px; @endguest ">
+<body class="hold-transition layout-top-nav">
 <div class="wrapper">
 
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <!-- Left navbar links -->
-        <ul class="navbar-nav">
-            @auth
-            <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
-            </li>
-            @endauth
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="index3.html" class="nav-link">Accueil</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Contactez-nous</a>
-            </li>
+    <nav class="main-header navbar navbar-expand navbar-light navbar-white">
+        <div class="container">
+            <a href="/" class="navbar-brand">
+                <img src="@guest /assets/dist/img/GLHLOGO.png @endguest @auth {{Auth::user()->photo}} @endauth" alt="Logo GLH" class="brand-image img-circle elevation-3" style="opacity: .8">
+            </a>
+            <ul class="navbar-nav">
 
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Aide</a>
-            </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">@guest Mon compte @endguest @auth {{Auth::user()->full_name}} @endauth</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                        @guest
+                            <li><a href="{{route('login')}}" class="dropdown-item">Se connecter</a></li>
+                            <li><a href="{{route('register')}}" class="dropdown-item">S'inscrire</a></li>
+                        @endguest
 
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Ajouter un établissement</a>
-            </li>
-        </ul>
+                        @auth
+                            <?php $hostels = Auth::user()->hostels;?>
+                            <li><a href="{{route('users.reservations')}}" class="dropdown-item">Mes réservations</a></li>
 
-        <!-- SEARCH FORM -->
-        <form class="form-inline ml-3">
-            <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Rechercher" aria-label="Rechercher">
-                <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
+                            @if($hostels->isEmpty())
 
-        @if (Route::has('login'))
+                                <li><a href="{{route('hostels')}}" class="dropdown-item">Mes hôtels</a></li>
 
-                <a class="nav-link" href="{{ route('login') }}">Connexion</a>
-        @endif
-        @if (Route::has('register'))
-                <a class="nav-link" href="{{ route('register') }}">Inscription</a>
+                            @else
+                                <li class="dropdown-submenu dropdown-hover">
+                                    <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Mes hôtels</a>
+                                    <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                                        <li><a href="{{route('hostels')}}" class="dropdown-item">Liste des hôtels</a></li>
+                                        <li class="dropdown-divider"></li>
 
-        @endif
+                                        @foreach($hostels as $hostel)
+                                            <li class="dropdown-submenu">
+                                                <a id="dropdownSubMenu3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">{{$hostel->name}}</a>
+                                                <ul aria-labelledby="dropdownSubMenu3" class="dropdown-menu border-0 shadow">
+                                                    <li><a href="{{route('hostels.show',['id'=>$hostel->id])}}" class="dropdown-item">Gérer</a></li>
+                                                    <li class="dropdown-divider"></li>
 
+                                                    @foreach($hostel->rooms as $room)
+                                                        <li><a href="{{route('hostels.rooms.show',['hostel'=>$hostel->id,'room'=>$room->id])}}" class="dropdown-item">{{$room->name}}</a></li>
+                                                    @endforeach
+                                                </ul>
+                                            </li>
+                                    @endforeach
+                                    <!-- End Level three -->
+                                    </ul>
+                                </li>
+
+                            @endif
+
+                            <li><a href="{{route('users.profile')}}" class="dropdown-item">Mom compte</a></li>
+
+
+                            @if(Auth::user()->isAdmin())
+                                <li class="dropdown-submenu dropdown-hover">
+                                    <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Administration</a>
+                                    <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+                                        <li class="dropdown-submenu">
+                                            <a id="dropdownSubMenu3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Hôtels</a>
+                                            <ul aria-labelledby="dropdownSubMenu3" class="dropdown-menu border-0 shadow">
+                                                <li><a href="{{route('admin.hostels',['option'=>'waiting'])}}" class="dropdown-item">Hôtels en attente de vérification</a></li>
+                                                <li class="dropdown-divider"></li>
+                                                <li><a href="{{route('admin.hostels',['option'=>'verified'])}}" class="dropdown-item">Hôtels vérifiés</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="dropdown-submenu">
+                                            <a id="dropdownSubMenu3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Utilisateurs</a>
+                                            <ul aria-labelledby="dropdownSubMenu3" class="dropdown-menu border-0 shadow">
+                                                <li><a href="" class="dropdown-item">Liste des utilisateurs</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="dropdown-submenu">
+                                            <a id="dropdownSubMenu3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Réservations</a>
+                                            <ul aria-labelledby="dropdownSubMenu3" class="dropdown-menu border-0 shadow">
+
+                                                <li><a href="" class="dropdown-item">Liste</a></li>
+                                               {{-- <li class="dropdown-divider"></li>
+
+                                                <li><a href="" class="dropdown-item">En cours</a></li>
+                                                <li><a href="" class="dropdown-item">À venir</a></li>
+                                                <li><a href="" class="dropdown-item">Terminées</a></li>--}}
+
+
+                                            </ul>
+                                        </li>
+                                        <!-- End Level three -->
+                                    </ul>
+                                </li>
+                            @endif
+
+                            <li class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                    {{ __('Déconnexion') }}
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </li>
+
+                    @endauth
+                    <!-- End Level two -->
+                    </ul>
+                </li>
+
+            </ul>
+
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/" class="nav-link">Accueil</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#0" class="nav-link">Contactez-nous</a>
+                </li>
+
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#0" class="nav-link">Faq</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#0" class="nav-link">Aide</a>
+                </li>
+
+                <li class="nav-item d-none d-sm-inline-block shadow">
+                    <a href="{{route('hostels.create')}}" class="nav-link btn btn-default font-weight-bolder btn-call-action">Ajouter un Hôtel</a>
+                </li>
+
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+
+
+                <a href="/" class="nav-link brand-text font-weight-ligh" style="font-size: 25px">GLH</a>
+
+            </ul>
+        </div>
 
 
     </nav>
     <!-- /.navbar -->
 
-    <!-- Main Sidebar Container -->
-    @auth
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <img src="assets/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                     style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
-            </a>
-
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="assets/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
-                </div>
-
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-                             with font-awesome or any other icon font library -->
-                        <li class="nav-item has-treeview menu-open">
-                            <a href="#" class="nav-link active">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Starter Pages
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link active">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Active Page</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Inactive Page</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Simple Link
-                                    <span class="right badge badge-danger">New</span>
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
-            <!-- /.sidebar -->
-        </aside>
-@endauth
-<!-- Content Wrapper. Contains page content -->
+    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <div class="content-header">
-            <div class="container-fluid">
+            <div class="container">
                 <div class="row mb-2">
-                    <div class="col-sm-12">
-                        <h1 class="m-0 text-dark" style="text-align: center">Acceuil</h1>
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark"> @yield('title')</h1>
                     </div><!-- /.col -->
 
+                    @yield('form-search')
+
+                    @section('breadcrumb')
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <?php
+                                $i = 0;
+                                $breadcrumbs = Request::segments();
+                                $count_breadcrumbs = count($breadcrumbs)?>
+                                @foreach($breadcrumbs as $segment)
+                                    <?php
+                                    $segments = "";
+
+                                    $segments.= '/'.$segment;
+
+                                    ?>
+
+                                    <?php if($i == $count_breadcrumbs - 1){?>
+                                    <li class="breadcrumb-item active"><a href="">{{$segment}}</a></li>
+
+                                    <?php }else{ ?>
+
+                                    <li class="breadcrumb-item"><a href="{{$segments}}">{{$segment}}</a></li>
+                                    <?php } $i++?>
+
+                                @endforeach
+                            </ol>
+                        </div><!-- /.col -->
+                    @show
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content-header -->
 
         <!-- Main content -->
+
         <div class="content">
-            <div class="container-fluid">
-            @yield('content')
-            <!-- /.row -->
+            <div class="container">
+
+                @yield('content')
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-        <div class="p-3">
-            <h5>Title</h5>
-            <p>Sidebar content</p>
-        </div>
-    </aside>
-    <!-- /.control-sidebar -->
+
+    <input
+            id="message_handler"
+            type="hidden"
+
+            @if(\Session::has('general_error'))
+            value="{{\Session::get('general_error')}}"
+            data-type="error"
+            @endif
+
+            @if(\Session::has('info'))
+            value="{{\Session::get('info')}}"
+            data-type="info"
+            @endif
+
+            @if(\Session::has('success'))
+            value="{{\Session::get('success')}}"
+            data-type="success"
+            @endif
+    >
 
     <!-- Main Footer -->
     <footer class="main-footer">
         <!-- To the right -->
         <div class="float-right d-none d-sm-inline">
-            Anything you want
+            Gestion de location d'hôtels
         </div>
         <!-- Default to the left -->
-        <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2019 <a href="/">GLH</a>.</strong> Tous droits réservés.
     </footer>
 </div>
 <!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
 
-<!-- jQuery -->
-<script src="assets/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="assets/dist/js/adminlte.min.js"></script>
+@section('js')
+    <!-- jQuery -->
+    <script src="/assets/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/assets/dist/js/adminlte.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+@show
 </body>
 </html>

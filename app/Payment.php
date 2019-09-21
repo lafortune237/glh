@@ -12,14 +12,11 @@ class Payment extends Model
     protected $fillable = [
         'selection_id',
         'account_owner',
-        'account_nbr',
-        'expiration_date',
-        'security_code',
         'total',
     ];
 
-    public function rental()
+    public function reservation()
     {
-        return $this->belongsTo(Rental::class);
+        return $this->belongsTo(Reservation::class,'selection_id','id');
     }
 }
