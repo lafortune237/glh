@@ -27,7 +27,7 @@ class Image extends Model
 
     public function getFilenameAttribute($image)
     {
-        return url("img/{$image}");
+        return url("uploads/{$image}");
     }
 
 }

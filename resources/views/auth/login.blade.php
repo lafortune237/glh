@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="assets/dist/css/adminlte.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
@@ -85,12 +88,34 @@
         <!-- /.login-card-body -->
     </div>
 </div>
+
+<input
+        id="message_handler"
+        type="hidden"
+
+        @if(\Session::has('general_error'))
+        value="{{\Session::get('general_error')}}"
+        data-type="error"
+        @endif
+
+        @if(\Session::has('info'))
+        value="{{\Session::get('info')}}"
+        data-type="info"
+        @endif
+
+        @if(\Session::has('success'))
+        value="{{\Session::get('success')}}"
+        data-type="success"
+        @endif
+>
 <!-- /.login-box -->
 
 <!-- jQuery -->
 <script src="assets/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+<script src="/assets/js/app.js"></script>
 
 </body>
 </html>

@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
 
                     DB::table('images')->insert([
                         'rel_id'=>$hostel->id,
-                        'filename' => 'hostel/'.$faker->randomElement($images),
+                        'filename' => config('images.hostelsImages').'/'.$faker->randomElement($images),
                         'image_type'=>$faker->randomElement(Image::DEFAULT_IMAGES_TYPES),
                         'rel'=>'hostel',
                         'created_at'=> $created_at = date("Y-m-d H:i:s"),
@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
 
                         DB::table('images')->insert([
                             'rel_id'=>$room->id,
-                            'filename' => 'room/'.$faker->randomElement($images),
+                            'filename' => config('images.roomsImages').'/'.$faker->randomElement($images),
                             'image_type'=>$faker->randomElement(Image::DEFAULT_IMAGES_TYPES),
                             'rel'=>'room',
                             'created_at'=> $created_at = date("Y-m-d H:i:s"),

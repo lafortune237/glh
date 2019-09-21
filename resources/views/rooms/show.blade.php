@@ -62,7 +62,7 @@
                                     @endif
                                     @foreach($room->options as $option)
                                         <li>
-                                            <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i> {{$option->option}}</a>
+                                            <a href="" class="btn-link text-secondary"><i class="{{$option->icon}}"></i> {{$option->option}}</a>
                                         </li>
                                     @endforeach
 

@@ -24,7 +24,9 @@ Route::get('admin/hostels/show/{hostel}','Admin\AdminController@showHostel')->na
 
 Route::get('hostels','Hostel\HostelController@index')->name('hostels');
 Route::get('hostels/new','Hostel\HostelController@create')->name('hostels.create');
+Route::get('hostels/new/{hostel}/images','Hostel\HostelController@createImages')->name('hostels.create.images');
 Route::post('hostels/new','Hostel\HostelController@store');
+Route::post('hostels/new/{hostel}/images','Hostel\HostelController@storeImages');
 Route::get('hostels/{hostel}','Hostel\HostelController@show')->name('hostels.show');
 Route::get('hostels/{hostel}/edit','Hostel\HostelController@edit')->name('hostels.edit');
 Route::post('hostels/{hostel}/edit','Hostel\HostelController@update');

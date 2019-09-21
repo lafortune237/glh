@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Modifier un Hôtel
+    Modifier
 @endsection
 
 @section('content')
@@ -12,33 +12,92 @@
             <div class="card card-primary">
 
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="inputName">Project Name</label>
-                        <input type="text" id="inputName" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputDescription">Project Description</label>
-                        <textarea id="inputDescription" class="form-control" rows="4"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputStatus">Status</label>
-                        <select class="form-control custom-select">
-                            <option selected disabled>Select one</option>
-                            <option>On Hold</option>
-                            <option>Canceled</option>
-                            <option>Success</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputClientCompany">Client Company</label>
-                        <input type="text" id="inputClientCompany" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputProjectLeader">Project Leader</label>
-                        <input type="text" id="inputProjectLeader" class="form-control">
-                    </div>
+                    <form action="{{route('hostels.edit',['hostel'=>$hostel->id])}}" method="post">
+                        @csrf
+                        <div class="form-group">
+                            <label for="inputName">Nom de l'hôtel*</label>
+                            <input value="{{$hostel->name}}" name="name" type="text" id="inputName" class="form-control @error('name') is-invalid @enderror">
+                            @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                       <strong>{{$message}}</strong>
+                                   </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description*</label>
+                            <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" rows="4">{{$hostel->description}}</textarea>
+                            @error('description')
+                            <span class="invalid-feedback" role="alert">
+                                       <strong>{{$message}}</strong>
+                                   </span>
+                            @enderror
+                        </div>
 
-                    <input type="submit" value="Suivant" class="btn btn-success float-right">
+                        <div class="form-group">
+                            <label  for="email">Email*</label>
+                            <input value="{{$hostel->email}}" name="email" type="text" id="address_station" class="form-control @error('email') is-invalid @enderror">
+                            @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                       <strong>{{$message}}</strong>
+                                   </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label  for="address_station">Adresse*</label>
+                            <input value="{{$hostel->address_station}}" name="address_station" type="text" id="address_station" class="form-control @error('address_station') is-invalid @enderror">
+                            @error('address_station')
+                            <span class="invalid-feedback" role="alert">
+                                       <strong>{{$message}}</strong>
+                                   </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact">FAX*</label>
+                            <input value="{{$hostel->contact}}" type="tel" id="contact" name="contact" class="form-control @error('name') is-invalid @enderror">
+                            @error('contact')
+                            <span class="invalid-feedback" role="alert">
+                                       <strong>{{$message}}</strong>
+                                   </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact">Options</label>
+
+                            @foreach($options as $option)
+                                <div class="custom-control custom-checkbox pb-2">
+                                    <input class="custom-control-input" type="checkbox" id="customCheckbox{{$option->id}}" name="{{$option->name}}" {{$hostel->checkOption($option->name)}}>
+                                    <label for="customCheckbox{{$option->id}}" class="custom-control-label"><i style="margin-right: 4px; margin-left: -16px" class="{{$option->icon}}"></i>  {{$option->option}}</label>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tel1">Tel. 1 (facultatif)</label>
+                            <input value="{{$hostel->tel1}}" type="tel" id="tel1" name="tel1" class="form-control @error('tel1') is-invalid @enderror">
+                            @error('tel1')
+                            <span class="invalid-feedback" role="alert">
+                                       <strong>{{$message}}</strong>
+                                   </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tel2">Tel. 2 (facultatif)</label>
+                            <input value="{{$hostel->tel2}}" type="tel" id="tel2" name="tel2" class="form-control @error('tel2') is-invalid @enderror">
+                            @error('tel2')
+                            <span class="invalid-feedback" role="alert">
+                                       <strong>{{$message}}</strong>
+                                   </span>
+                            @enderror
+                        </div>
+
+
+                        <input type="submit" value="Suivant" class="btn btn-success float-right">
+                    </form>
+
 
                 </div>
                 <!-- /.card-body -->

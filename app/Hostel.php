@@ -31,6 +31,19 @@ class Hostel extends Model
         'min_price'
     ];
 
+    public function checkOption($option_name)
+    {
+        foreach ($this->options as $option){
+
+            if($option->name == $option_name){
+
+                return 'checked';
+            }
+        }
+
+        return '';
+    }
+
     public function getMinPriceAttribute()
     {
         return $this->rooms()->min('price_night');
@@ -65,7 +78,7 @@ class Hostel extends Model
 
     public function images()
     {
-        return $this->hasMany(HostelImage::class,'rel_id','id');
+        return $this->hasMany(HostelImage::class,'rel_id','id')->take(5);
     }
 
     public function rooms()

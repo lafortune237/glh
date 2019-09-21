@@ -13,27 +13,27 @@ class Option extends Model
         0 => [
 
             'id' => 1,
-            'icon' => '',
+            'icon' => 'fas fa-beer',
             'option' => 'Bar',
-            'name' => 'drink',
+            'name' => 'bar',
             'rel'=>'hostel'
         ],
 
         1 => [
 
             'id' => 2,
-            'icon' => '',
+            'icon' => 'fad fa-h-square',
             'option' => 'Buanderie',
-            'name' => '',
+            'name' => 'washer',
             'rel'=>'hostel'
         ],
 
         2 => [
 
             'id' => 3,
-            'icon' => '',
+            'icon' => 'fas fa-dog',
             'option' => 'Animaux de compagnie acceptés',
-            'name' => '',
+            'name' => 'pet',
             'rel'=>'hostel'
         ],
         3 => [
@@ -48,25 +48,25 @@ class Option extends Model
         4 => [
 
             'id' => 5,
-            'icon' => '',
+            'icon' => 'fas fa-baby',
             'option' => 'Crêche',
-            'name' => '',
+            'name' => 'sitter',
             'rel'=>'hostel'
         ],
 
         5 => [
 
             'id' => 6,
-            'icon' => '',
+            'icon' => 'fas fa-utensils',
             'option' => 'Déjeuner compris',
-            'name' => '',
+            'name' => 'launch',
             'rel'=>'room'
         ],
 
         6 => [
 
             'id' => 7,
-            'icon' => '',
+            'icon' => 'fas fa-swimming-pool',
             'option' => 'Piscine',
             'name' => 'swimming_pool',
             'rel'=>'hostel'
@@ -75,7 +75,7 @@ class Option extends Model
         7 => [
 
             'id' => 8,
-            'icon' => '',
+            'icon' => 'fas fa-hot-tub',
             'option' => 'Spa',
             'name' => 'spa',
             'rel'=>'hostel'
@@ -83,7 +83,7 @@ class Option extends Model
         8 => [
 
             'id' => 9,
-            'icon' => '',
+            'icon' => 'fas fa-dumbbell',
             'option' => 'Gym',
             'name' => 'gym',
             'rel'=>'hostel'
@@ -92,45 +92,45 @@ class Option extends Model
         9 => [
 
             'id' => 10,
-            'icon' => '',
+            'icon' => 'fas fa-hands-helping',
             'option' => 'Service aux champbres',
-            'name' => '',
+            'name' => 'help',
             'rel'=>'room'
         ],
 
         10 => [
 
             'id' => 11,
-            'icon' => '',
+            'icon' => 'fas fa-shuttle-van',
             'option' => 'Navette Aéroportuaire',
-            'name' => '',
+            'name' => 'shuttle',
             'rel'=>'hostel'
         ],
 
         11 => [
 
             'id' => 12,
-            'icon' => '',
+            'icon' => 'fad fa-h-square',
             'option' => 'Terrain de tenis',
-            'name' => '',
+            'name' => 'tenis',
             'rel'=>'hostel'
         ],
 
         12 => [
 
             'id' => 13,
-            'icon' => '',
+            'icon' => 'fas fa-basketball-ball',
             'option' => 'Terrain de bascket',
-            'name' => '',
+            'name' => 'basket',
             'rel'=>'hostel'
         ],
 
         13 => [
 
             'id' => 14,
-            'icon' => '',
+            'icon' => 'fas fa-futbol',
             'option' => 'Terrain de foot',
-            'name' => '',
+            'name' => 'football',
             'rel'=>'hostel'
         ],
     ];
@@ -142,6 +142,7 @@ class Option extends Model
         'rel'
     ];
 
+
     public function rooms()
     {
         return $this->belongsToMany(Room::class,'option_room');
@@ -151,6 +152,7 @@ class Option extends Model
     {
         return $this->belongsToMany(Hostel::class,'option_hostel');
     }
+
 
 
 }

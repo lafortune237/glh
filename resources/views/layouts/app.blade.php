@@ -17,7 +17,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Theme style -->
         <link rel="stylesheet" href="/assets/dist/css/adminlte.min.css">
         <link rel="stylesheet" href="/assets/dist/css/custom.css">
-
+        <link rel="stylesheet" href="/assets/css/custom.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
         <style>
             @yield('custom-css')
 
@@ -109,11 +110,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             <ul aria-labelledby="dropdownSubMenu3" class="dropdown-menu border-0 shadow">
 
                                                 <li><a href="" class="dropdown-item">Liste</a></li>
-                                                <li class="dropdown-divider"></li>
+                                               {{-- <li class="dropdown-divider"></li>
 
                                                 <li><a href="" class="dropdown-item">En cours</a></li>
                                                 <li><a href="" class="dropdown-item">À venir</a></li>
-                                                <li><a href="" class="dropdown-item">Terminées</a></li>
+                                                <li><a href="" class="dropdown-item">Terminées</a></li>--}}
 
 
                                             </ul>
@@ -236,6 +237,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
     <!-- /.content-wrapper -->
 
+
+    <input
+            id="message_handler"
+            type="hidden"
+
+            @if(\Session::has('general_error'))
+            value="{{\Session::get('general_error')}}"
+            data-type="error"
+            @endif
+
+            @if(\Session::has('info'))
+            value="{{\Session::get('info')}}"
+            data-type="info"
+            @endif
+
+            @if(\Session::has('success'))
+            value="{{\Session::get('success')}}"
+            data-type="success"
+            @endif
+    >
+
     <!-- Main Footer -->
     <footer class="main-footer">
         <!-- To the right -->
@@ -257,6 +279,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/assets/dist/js/adminlte.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
 @show
 </body>
 </html>
