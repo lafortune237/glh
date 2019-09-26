@@ -44,7 +44,7 @@ $factory->define(Hostel::class, function (Faker $faker) {
 
     $hostel = [
         'user_id' => User::all()->random()->id,
-        'name' => 'hotel '.$faker->name,
+        'name' => $faker->name,
         'description'=>$faker->paragraph(10),
         'address_station'=>$faker->city,
         'address_latitude'=>$faker->latitude,

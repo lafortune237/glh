@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
 
                     DB::table('images')->insert([
                         'rel_id'=>$hostel->id,
-                        'filename' => config('images.hostelsImages').'/'.$faker->randomElement($images),
+                        'filename' => 'hostels/'.$faker->randomElement($images),
                         'image_type'=>$faker->randomElement(Image::DEFAULT_IMAGES_TYPES),
                         'rel'=>'hostel',
                         'created_at'=> $created_at = date("Y-m-d H:i:s"),
@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
 
                         DB::table('images')->insert([
                             'rel_id'=>$room->id,
-                            'filename' => config('images.roomsImages').'/'.$faker->randomElement($images),
+                            'filename' => 'rooms/'.$faker->randomElement($images),
                             'image_type'=>$faker->randomElement(Image::DEFAULT_IMAGES_TYPES),
                             'rel'=>'room',
                             'created_at'=> $created_at = date("Y-m-d H:i:s"),
@@ -154,20 +154,21 @@ class DatabaseSeeder extends Seeder
                     ->toArray();
 
                 $rooms = Room::all()->except($tenant_rooms)->random(mt_rand(1,3));
+                $faker = Faker\Factory::create('fr_FR');
 
                 $total_rental = 0.00;
 
                 foreach ($rooms as $room){
 
-                    $pricing = $selection->getInfoPricing($room);
+                    $info_price = $selection->getInfoPricing($room)->getData();
 
-                    if(isset($pricing['pricing'])){
+                    if($info_price->pricing){
 
-                        $total_rental += $pricing['pricing']['total'];
+                        $total_rental += $info_price->pricing->total;
 
                         $selection->rooms()->attach($room->id, [
-                            'total'=>$pricing['pricing']['total'],
-                            'pricing'=>json_encode($pricing['pricing']),
+                            'total'=>$info_price->pricing->total,
+                            'pricing'=>json_encode($info_price->pricing),
                             'created_at'=> $created_at = date("Y-m-d H:i:s"),
                             'updated_at'=>$created_at
                         ]);
@@ -179,6 +180,7 @@ class DatabaseSeeder extends Seeder
                     DB::table('payments')->insert([
                         'selection_id'=>$selection->id,
                         'account_owner' => $selection->user->full_name,
+                        'account_nbr' => $faker->bankAccountNumber,
                         'total'=>$total_rental,
                         'created_at'=> $created_at = date("Y-m-d H:i:s"),
                         'updated_at'=>$created_at

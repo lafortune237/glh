@@ -25,7 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $hostels = Hostel::has('rooms')
+        $hostels = Hostel::has('AvailableRooms')
             ->where(['verified'=>Hostel::VERIFIED_HOSTEL])
             ->orderBy('nbr_rental','desc')
             ->take(15)

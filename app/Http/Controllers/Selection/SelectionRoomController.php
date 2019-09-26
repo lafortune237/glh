@@ -2,91 +2,83 @@
 
 namespace App\Http\Controllers\Selection;
 
+use App\Payment;
+use App\Room;
 use App\Selection;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class SelectionRoomController extends Controller
 {
 
-    public function book(Request $request, $room){
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['booking']);
+    }
 
-        dd($request->all());
+    public function booking($id)
+    {
+        $selection = Selection::findOrFail($id);
+
+        if(!$selection->user_id){
+
+            $selection->user_id = Auth::id();
+
+        }else{
+
+            if($selection->user_id !== Auth::id()){
+
+                abort(404);
+            }
+        }
+
+        if($selection->nbr_rooms === 0){
+
+            return redirect(route('home'))
+                ->with(['general_error'=>'Désolé les chambres sélectionnées ne sont plus disponibles']);
+        }
+
+        return view('rooms.payment')->with(['selection'=>$selection]);
+
+
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $id
+     * @return $this
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function index()
+    public function book(Request $request, $id)
     {
-        //
-    }
+        $selection = Selection::findOrFail($id);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        if($selection->user_id !== Auth::id()){
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            abort(404);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Selection  $selection
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Selection $selection)
-    {
-        //
-    }
+        $rules = [
+            'account_nbr'=>'required|integer|digits:16',
+            'account_owner'=>'required',
+            'month'=>'required|digits_between:1,2',
+            'year'=>'required|digits:4',
+            'cvv'=>'required|digits:3'
+        ];
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Selection  $selection
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Selection $selection)
-    {
-        //
-    }
+       $data = $this->validate($request,$rules);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Selection  $selection
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Selection $selection)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Selection  $selection
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Selection $selection)
-    {
-        //
+
+        $data['selection_id'] = $selection->id;
+        $data->total = $selection->total;
+
+        Payment::create($data);
+
+
+
+
+        return view('rooms.payment-success')->with(['selection'=>$selection]);
     }
 }

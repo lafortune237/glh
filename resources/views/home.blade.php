@@ -53,7 +53,7 @@
                     <div class="col-md-4 col-12">
 
                         <div class="card-body">
-                            <h4 class="mt-3">{{$hostel->name}} <small></small></h4>
+                            <h4 class="mt-3">Hôtel {{$hostel->name}} <small></small></h4>
 
                             <img class="img-fluid pad" style="height: 200px; width: 100%" src="{{$hostel->front_image}}" alt="Photo">
 
@@ -67,7 +67,7 @@
                             </div>
                             <span><i class="fas fa-map-marker-alt"></i> {{$hostel->address_station}}</span><br>
 
-                            <span class="text-muted"> {{$hostel->nbr_rental}}  @if($hostel->nbr_rental > 1) réservations @else réservation @endif</span>
+                            <span class="text-muted"> {{$hostel->nbr_rental}}  @if($hostel->nbr_rental > 1) réservations @else réservation @endif de chambre</span>
 
                             <a href="{{route('hostels.show',['hostel'=>$hostel->id])}}" class="btn btn-success">Consulter</a>
                         </div>

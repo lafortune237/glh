@@ -18,6 +18,7 @@ class CreatePaymentsTable extends Migration
             $table->unsignedBigInteger('selection_id');
             $table->foreign('selection_id')->references('id')->on('selections');
             $table->string('account_owner')->nullable()->comment('Nom et prénom ou raison sociale sur la carte bancaire');
+            $table->string('account_nbr')->nullable()->comment('Numéro de compte bancaire');
             $table->string('total')->comment('Total payé');
             $table->timestamps();
         });

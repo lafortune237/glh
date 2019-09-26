@@ -37,7 +37,10 @@ Route::post('hostels/{hostel}/rooms/new','Hostel\HostelRoomController@store');
 Route::get('hostels/{hostel}/rooms/{room}','Hostel\HostelRoomController@show')->name('hostels.rooms.show');
 Route::get('hostels/{hostel}/rooms/{room}/edit','Hostel\HostelRoomController@edit')->name('hostels.rooms.edit');
 Route::post('hostels/{hostel}/rooms/{room}/edit','Hostel\HostelRoomController@update');
-Route::get('hostels/{hostel}/rooms/{room}/book','Hostel\HostelRoomController@booking')->name('hostels.rooms.book');
-Route::post('hostels/{hostel}/rooms/{room}/book','Selection\SelectionRoomController@book');
+Route::get('hostels/{hostel}/rooms/{room}/booking','Hostel\HostelRoomController@booking')->name('hostels.rooms.booking');
+Route::post('hostels/{hostel}/rooms/{room}/booking','Hostel\HostelRoomController@book');
+
+Route::get('selections/{selection}/booking','Selection\SelectionRoomController@booking')->name('selections.booking');
+Route::post('selections/{selection}/booking','Selection\SelectionRoomController@book');
 
 

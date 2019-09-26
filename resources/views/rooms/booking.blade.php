@@ -48,7 +48,7 @@
 
                 <!-- /.card- -->
                     <div class="card-body">
-                        <h4 class="mt-3">{{$room->hostel->name}}
+                        <h4 class="mt-3">Hôtel {{$room->hostel->name}}
                             <small></small></h4>
 
                         <a href="{{route('hostels.show',['hostel'=>$room->hostel->id])}}"><img class="img-fluid pad" style="height: 200px; width: 100%" src="{{$room->hostel->front_image}}" alt="Room Image"></a>
@@ -121,33 +121,49 @@
                         </h4>
                     </div>
 
-                    <form method="post" action="{{route('hostels.rooms.book',['hostel'=>$room->hostel->id,'room'=>$room->id])}}" id="book-room">
-                        @csrf
-                        <div class="form-group-lg">
-                            <label>Sélectionez des dates:</label>
+                    @if($room->isAvailable())
+                        <form method="post" action="{{route('hostels.rooms.booking',['hostel'=>$room->hostel->id,'room'=>$room->id])}}" id="book-room">
+                            @csrf
+                            <div class="form-group-lg">
+                                <label>Sélectionez des dates:</label>
 
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="far fa-calendar"></i></span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-calendar"></i></span>
+                                    </div>
+                                    <input name="request_dates"  type="text" class="form-control @error('request_dates') is-invalid @enderror" id="request_dates">
+                                    @error('request_dates')
+                                    <span class="invalid-feedback" role="alert">
+                                       <strong>{{$message}}</strong>
+                                   </span>
+                                    @enderror
                                 </div>
-                                <input type="text" class="form-control float-right" id="request_dates">
+                                <!-- /.input group -->
                             </div>
-                            <!-- /.input group -->
-                        </div>
-                        <div class="form-group" style="margin-top: 10px; border-radius: 4px !important;">
-                            <a onclick="
+                            <div class="form-group" style="margin-top: 10px; border-radius: 4px !important;">
+                                <a onclick="
                             event.preventDefault();
-                            alert(document.getElementById('request_dates').value);
-                            document.getElementById('reservation_dates').value = document.getElementById('request_dates').value;
 
                                 document.getElementById('book-room').submit()"
-                               type="submit" class="btn btn-success btn-lg btn-flat  shadow">
-                                Réserver
-                            </a>
-                        </div>
+                                   type="submit" class="btn btn-success btn-lg btn-flat  shadow">
+                                    Réserver
+                                </a>
+                            </div>
 
-                        <input type="hidden" name="request_dates" id="reservation_dates">
-                    </form>
+                        </form>
+
+                    @else
+                        <div class="row">
+
+                            <div class="col-10">
+                                <div class="alert alert-warning alert-dismissible" style="margin-top: 10px ">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <h5><i class="icon fas fa-exclamation-triangle"></i> Chambre indisponible!</h5>
+                                    Vous ne pouvez pas louer cette chambre car elle est indisponible pour le moment.
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                 </div>
             </div>
@@ -173,17 +189,12 @@
     <!-- Page script -->
     <script>
         $(function () {
-
-
-
-            //Date range picker
-            $('#reservation').daterangepicker()
             //Date range picker with time picker
             $('#request_dates').daterangepicker({
                 timePicker: true,
                 timePickerIncrement: 30,
                 locale: {
-                    format: 'MM/DD/YYYY hh:mm'
+                    format: 'MM/DD/YYYY HH:mm'
                 }
             })
         })
