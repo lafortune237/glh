@@ -91,7 +91,7 @@ class User extends Authenticatable
             return url(config('images.userAvatar'));
         }
         if(strpos($photo,'facebook') == true || strpos($photo,'google') == true || strpos($photo,'lorempixel') == true){
-            return $photo;
+            return url(config('images.userAvatar'));
 
         }
 

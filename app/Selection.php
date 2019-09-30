@@ -36,7 +36,9 @@ class Selection extends Model
     protected $appends = [
         'date_start_human',
         'date_end_human',
-        'timing'
+        'timing',
+        'total',
+        'nbr_rooms'
     ];
 
     public function getTimingAttribute()
@@ -112,32 +114,36 @@ class Selection extends Model
         $price_hour = $room->price_hour;
         $price_hour_estimated = $room->price_hour_estimated;
 
-        $pricing_arr = [];
-        $pricing_arr['option'] = 'calculated';
-
         if($start_date->greaterThan($end_date)) {
 
-            $pricing_arr['message'] = 'invalid_dates';
-            return $pricing_arr;
-
+            return response()->json([
+                'option' => 'calculated',
+                'message' => 'invalid_dates'
+            ], 200);
         }
 
         if($start_date->lessThan(Carbon::now())){
 
-            $pricing_arr['message'] = 'passed_dates';
-            return $pricing_arr;
+            return response()->json([
+                'option' => 'calculated',
+                'message' => 'passed_dates'
+            ], 200);
         }
 
         if($start_date->diffInDays($end_date) > Selection::MAX_NIGHTS){
 
-            $pricing_arr['message'] = 'delay_passed';
-            return $pricing_arr;
+            return response()->json([
+                'option' => 'calculated',
+                'message' => 'delay_passed'
+            ], 200);
         }
 
         if($start_date->diffInHours($end_date) < Selection::MIN_HOURS){
 
-            $pricing_arr['message'] = 'short_date';
-            return $pricing_arr;
+            return response()->json([
+                'option' => 'calculated',
+                'message' => 'short_date'
+            ], 200);
         }
 
         if($start_date->diffInHours($end_date) < 24){
@@ -146,42 +152,83 @@ class Selection extends Model
             $total_ht = $nbr_hours * $price_hour;
             $total = $nbr_hours * $price_hour_estimated;
 
-            $pricing_arr['message'] = 'success';
-            $pricing_arr['pricing'] = [
-                'total' => $total,
-                'total_ht'=>$total_ht,
-                'nbr_hours'=> $nbr_hours,
-                'base_pricing' => [
-                    'price_hour' => $price_hour,
-                    'price_hour_estimated'=>$price_hour_estimated
-                ],
-            ];
-
-            return $pricing_arr;
+            return response()->json([
+                'option' => 'calculated',
+                'message' => 'success',
+                'pricing'=>[
+                    'total' => $total,
+                    'total_ht'=>$total_ht,
+                    'nbr_hours'=> $nbr_hours,
+                    'base_pricing' => [
+                        'price_hour' => $price_hour,
+                        'price_hour_estimated'=>$price_hour_estimated
+                    ],
+                ]
+            ], 200);
         }
 
         $nbr_nights = $start_date->diffInDays($end_date);
         $total_ht = $nbr_nights * $price_night;
         $total = $nbr_nights * $price_night_estimated;
 
-        $pricing_arr['message'] = 'success';
-        $pricing_arr['pricing'] = [
-            'total' => $total,
-            'total_ht'=>$total_ht,
-            'nbr_nights'=> $nbr_nights,
-            'base_pricing' => [
-                'price_night' => $price_night,
-                'price_night_estimated'=>$price_night_estimated
+        return response()->json([
+            'option' => 'calculated',
+            'message' => 'success',
+            'pricing'=>[
+                'total' => $total,
+                'total_ht'=>$total_ht,
+                'nbr_nights'=> $nbr_nights,
+                'base_pricing' => [
+                    'price_night' => $price_night,
+                    'price_night_estimated'=>$price_night_estimated
 
-            ],
-        ];
+                ],
+            ]
+        ], 200);
 
-        return $pricing_arr;
+    }
+
+    public function getTotalAttribute()
+    {
+        $total = 0.00;
+
+        if(!$this->rooms->isEmpty()){
+
+            foreach ($this->rooms as $room){
+
+                if($room->isAvailable()){
+                    $total += $room->pivot->total;
+                }
+
+            }
+        }
+
+
+        return $total;
+    }
+
+    public function getNbrRoomsAttribute()
+    {
+        $nbr = 0;
+
+        if(!$this->rooms->isEmpty()){
+
+            foreach ($this->rooms as $room){
+
+                if($room->isAvailable()){
+                    $nbr += 1;
+                }
+
+            }
+        }
+
+        return $nbr;
     }
 
     public function rooms()
     {
-        return $this->belongsToMany(Room::class,'room_selection','selection_id');
+        return $this->belongsToMany(Room::class,'room_selection')
+            ->withPivot(['status','total','pricing','created_at','updated_at']);
     }
 
     public function user()

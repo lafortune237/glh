@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Hostel;
 
 use App\Hostel;
 use App\Option;
+use App\Room;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -187,7 +188,15 @@ class HostelController extends Controller
     {
         $hostel = Hostel::findOrFail($id);
 
-        return view('hostels.show')->with(['hostel'=>$hostel]);
+        if($hostel->user_id == Auth::id()){
+
+            $rooms = $hostel->rooms;
+        }else{
+
+            $rooms = $hostel->AvailableRooms;
+        }
+
+        return view('hostels.show')->with(['hostel'=>$hostel,'rooms'=>$rooms]);
 
     }
 
@@ -240,17 +249,6 @@ class HostelController extends Controller
             ->with(['success'=>$hostel->name.' modifié avec succès']);
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Hostel  $hostel
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Hostel $hostel)
-    {
-        //
-    }
 
     public function checkUser($user,$hostel)
     {

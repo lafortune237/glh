@@ -75,7 +75,7 @@ class Room extends Model
 
     public function selections()
     {
-        return $this->belongsToMany(Selection::class);
+        return $this->belongsToMany(Selection::class,'room_selection');
     }
 
     public function reservations()

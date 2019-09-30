@@ -31,6 +31,31 @@ class Hostel extends Model
         'min_price'
     ];
 
+    public function getNameAttribute($name)
+    {
+        return ucwords($name);
+    }
+
+    public function getAddressStationAttribute($address)
+    {
+        return ucwords($address);
+    }
+
+    public function setNameAttribute($name)
+    {
+        $this->attributes['name'] = strtolower($name);
+    }
+
+    public function setEmailAttribute($email)
+    {
+        $this->attributes['email'] = strtolower($email);
+    }
+
+    public function setAddressStationAttribute($address)
+    {
+        $this->attributes['address_station'] = strtolower($address);
+    }
+
     public function checkOption($option_name)
     {
         foreach ($this->options as $option){
@@ -46,7 +71,12 @@ class Hostel extends Model
 
     public function getMinPriceAttribute()
     {
-        return $this->rooms()->min('price_night');
+
+        $min_price = $this->rooms()->where(['available'=>Room::AVAILABLE_ROOM])->min('price_night');
+
+        $taxes = $min_price * (Reservation::PRICING_RATE / 100);
+        return ceil($min_price + $taxes);
+
     }
 
     public function getFrontImageAttribute()
@@ -84,5 +114,10 @@ class Hostel extends Model
     public function rooms()
     {
         return $this->hasMany(Room::class);
+    }
+
+    public function AvailableRooms()
+    {
+        return $this->hasMany(Room::class)->where(['available'=>Room::AVAILABLE_ROOM]);
     }
 }
