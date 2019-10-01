@@ -9,6 +9,96 @@ use App\Http\Controllers\Controller;
 
 class AdminController extends Controller
 {
+    public function validateHostel(Request $request, $hostel)
+    {
+        $hostel = Hostel::findOrFail($hostel);
+
+        if(!$hostel->isVerified()){
+            $hostel->verified = Hostel::VERIFIED_HOSTEL;
+
+            $hostel->save();
+
+
+            $this->forwardHostel($request,$hostel);
+
+
+        }
+
+        return back();
+
+
+    }
+    public function unvalidateHostel(Request $request, $hostel)
+    {
+
+        $hostel = Hostel::findOrFail($hostel);
+
+        if($hostel->isVerified()){
+
+            $hostel->verified = Hostel::UNVERIFIED_HOSTEL;
+
+            $hostel->save();
+
+
+            $this->unforwardHostel($request,$hostel);
+
+
+        }
+        return back();
+    }
+
+
+    public function forwardHostel(Request $request, $hostel)
+    {
+
+        if(!$hostel->isForwarded() && !$hostel->AvailableRooms()->get()->isEmpty()){
+
+            $hostel->forwarded = Hostel::FORWARDED_HOSTEL;
+            $hostel->save();
+
+            if(Hostel::where(['forwarded'=>Hostel::FORWARDED_HOSTEL])->get()->count() >= 15){
+
+                $hostel_replacer = Hostel::has('AvailableRooms')
+                    ->where(['verified'=>Hostel::VERIFIED_HOSTEL,'forwarded'=>Hostel::FORWARDED_HOSTEL])
+                    ->orderBy('created_at','desc')
+                    ->first();
+
+                $hostel_replacer->forwarded = Hostel::REGULAR_HOSTEL;
+                $hostel_replacer->save();
+            }
+
+        }
+
+        return back()->with(['success'=>'Opération réussie']);
+
+    }
+
+    public function unforwardHostel(Request $request,$hostel)
+    {
+
+        if($hostel->isForwarded()){
+
+            $hostel->forwarded = Hostel::REGULAR_HOSTEL;
+            $hostel->save();
+
+            if(Hostel::where(['forwarded'=>Hostel::FORWARDED_HOSTEL])->get()->count() < 15){
+                $hostel_replacer = Hostel::has('AvailableRooms')
+                    ->where(['verified'=>Hostel::VERIFIED_HOSTEL,'forwarded'=>Hostel::REGULAR_HOSTEL])
+                    ->orderBy('nbr_rental','desc')
+                    ->first();
+
+                $hostel_replacer->forwarded = Hostel::FORWARDED_HOSTEL;
+                $hostel_replacer->save();
+            }
+
+        }
+
+
+
+        return back()->with(['success'=>'Opération réussie']);
+
+    }
+
     public function checkUser($user,$hostel)
     {
         if($user->id !== $hostel->id){

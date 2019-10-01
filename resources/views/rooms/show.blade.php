@@ -32,11 +32,21 @@
 
                     <h3 class="my-3">{{$room->name}}
                         <a  href="{{route('hostels.rooms.edit',['hostel'=>$room->hostel->id,'room'=>$room->id])}}" class="btn btn-default btn-sm"><i class="fas fa-edit"></i> Modifier</a>
-                            @if($room->isAvailable())
-                                <a  href="{{route('hostels.edit',['hostel'=>$room->hostel->id])}}" class="btn btn-danger btn-sm"><i class="fas fa-edit"></i> Désactiver</a>
-                            @else
-                                <a  href="{{route('hostels.edit',['hostel'=>$room->hostel->id])}}" class="btn btn-success btn-sm"><i class="fas fa-edit"></i> Activer</a>
+                        @if($room->isAvailable())
+                            <a onclick="event.preventDefault(); document.getElementById('form_deactivate_room').submit()" href="" class="btn btn-danger btn-sm"> Désactiver</a>
+                            <form hidden method="post" id="form_deactivate_room" action="{{route('hostels.rooms.deactivate',['hostel'=>$room->hostel->id,'room'=>$room->id])}}">
+                                @csrf
+                            </form>
+                        @else
+                            <a onclick="event.preventDefault(); document.getElementById('form_activate_room').submit()"  href="" class="btn btn-success btn-sm"> Activer</a>
+
+                            <form hidden method="post" id="form_activate_room" action="{{route('hostels.rooms.activate',['hostel'=>$room->hostel->id,'room'=>$room->id])}}">
+                                @csrf
+                            </form>
+
                         @endif
+                        <a  href="{{route('hostels.show',['hostel'=>$room->hostel->id])}}" class="btn btn-default btn-sm"><i class="fas fa-backward"></i> Retour à l'hôtel</a>
+
                     </h3>
 
                     <a href="" class="btn-link text-decoration-none"><i class="fas fa-map-marker-alt"></i> {{$room->hostel->address_station}}</a>

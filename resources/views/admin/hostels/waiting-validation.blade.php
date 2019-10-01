@@ -58,10 +58,15 @@
                                 </button>
                                 <div class="dropdown-menu" role="menu">
                                     <a class="dropdown-item" href="{{route('admin.hostels.show',['hostel'=>$hostel->id])}}">Afficher</a>
-                                    <a class="dropdown-item" href="#">Valider</a>
-                                    <a class="dropdown-item" href="#">Rejeter</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Supprimer</a>
+                                    @if($hostel->isVerified())
+                                        <a onclick="event.preventDefault(); document.getElementById('form_validate_hostel').submit()" class="dropdown-item" href="#">Valider</a>
+                                        @include('admin.partials.form-validate-hostel',['form'=>'validate'])
+                                    @else
+                                        <a onclick="event.preventDefault(); document.getElementById('form_unvalidate_hostel').submit()" class="dropdown-item" href="#">Rejeter</a>
+                                        @include('admin.partials.form-validate-hostel',['form'=>'unvalidate'])
+
+                                    @endif
+
                                 </div>
                             </div></td>
 

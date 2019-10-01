@@ -32,6 +32,16 @@ class Room extends Model
         'front_image'
     ];
 
+    public function getNameAttribute($name)
+    {
+        if($name === null || $name == '' || $name == ' ' || !$name){
+
+            return $this->category->name;
+        }
+
+        return $name.' ('.$this->category->name.')';
+    }
+
     public function isAvailable()
     {
         return $this->available == Room::AVAILABLE_ROOM;
@@ -91,5 +101,10 @@ class Room extends Model
     public function options()
     {
         return $this->belongsToMany(Option::class,'option_room');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

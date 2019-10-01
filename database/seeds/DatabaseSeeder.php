@@ -79,6 +79,13 @@ class DatabaseSeeder extends Seeder
                     $images[$i] = $i.'.jpg';
                 }
 
+               $hostel->forwarded = $hostel->isVerified() &&
+
+               Hostel::where(['forwarded'=>Hostel::FORWARDED_HOSTEL])->get()->count() < 15 ?
+                    Hostel::FORWARDED_HOSTEL : Hostel::REGULAR_HOSTEL;
+
+                $hostel->save();
+
                 for($i= 0; $i< 5;$i++){
 
                     DB::table('images')->insert([
@@ -162,7 +169,7 @@ class DatabaseSeeder extends Seeder
 
                     $info_price = $selection->getInfoPricing($room)->getData();
 
-                    if($info_price->pricing){
+                    if(isset($info_price->pricing)){
 
                         $total_rental += $info_price->pricing->total;
 

@@ -3,6 +3,7 @@
 @section('title')
 
     {{$room->name}}
+
 @endsection
 
 @section('content')

@@ -50,7 +50,7 @@ $factory->define(Hostel::class, function (Faker $faker) {
         'address_latitude'=>$faker->latitude,
         'address_longitude'=>$faker->longitude,
         'contact'=>$faker->phoneNumber,
-        'verified' => $faker->randomElement([Hostel::VERIFIED_HOSTEL,Hostel::UNVERIFIED_HOSTEL]),
+        'verified' => $verified = $faker->randomElement([Hostel::VERIFIED_HOSTEL,Hostel::UNVERIFIED_HOSTEL]),
         'email'=>$faker->email,
         'tel1'=>$faker->phoneNumber,
         'tel2'=>$faker->phoneNumber

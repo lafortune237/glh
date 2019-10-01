@@ -133,6 +133,23 @@ class Option extends Model
             'name' => 'football',
             'rel'=>'hostel'
         ],
+        14 => [
+
+            'id' => 15,
+            'icon' => 'fas fa-wifi',
+            'option' => 'Wifi gratuit',
+            'name' => 'wifi',
+            'rel'=>'hostel'
+        ],
+
+        15 => [
+
+            'id' => 16,
+            'icon' => 'fas fa-wifi',
+            'option' => 'Wifi gratuit',
+            'name' => 'wifi',
+            'rel'=>'room'
+        ],
     ];
 
     protected $fillable = [

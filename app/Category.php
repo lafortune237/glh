@@ -44,7 +44,7 @@ class Category extends Model
         'name'
     ];
 
-    public function room()
+    public function rooms()
     {
         return $this->belongsToMany(Room::class);
     }

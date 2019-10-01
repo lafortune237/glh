@@ -26,7 +26,8 @@ class CreateHostelsTable extends Migration
             $table->string('email')->nullable();
             $table->string('tel1')->nullable();
             $table->string('tel2')->nullable();
-            $table->boolean('verified')->default(\App\Hostel::UNVERIFIED_HOSTEL)->comment(config('dbcomments.validated'));
+            $table->string('verified')->default(\App\Hostel::UNVERIFIED_HOSTEL)->comment(config('dbcomments.validated'));
+            $table->string('forwarded')->default(\App\Hostel::REGULAR_HOSTEL);
             $table->integer('nbr_rental')->unsigned()->nullable()->default(0)->comment(config('dbcomments.nbr_rental'));
             $table->timestamps();
         });

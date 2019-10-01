@@ -4,14 +4,16 @@
 
     {{$hostel->name}}
 
-    @if(!$hostel->isVerified())
-        <a  href="" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Valider</a>
-        <a  href="" class="btn btn-warning btn-sm"><i class="fa fa-close"></i> Rejeter</a>
-        <a  href="" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Supprimer</a>
+    @if($hostel->isVerified())
+
+        <a href="#" onclick="event.preventDefault(); document.getElementById('form_unvalidate_hostel').submit()" class="btn btn-danger btn-sm">Rejeter</a>
+        @include('admin.partials.form-validate-hostel',['form'=>'unvalidate'])
     @else
-        <a  href="" class="btn btn-warning btn-sm"><i class="fa fa-close"></i> Invalider</a>
-        <a  href="" class="btn btn-danger btn-sm"><i class="fa fa-close"></i> Supprimer</a>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('form_validate_hostel').submit()" class="btn btn-success btn-sm">valider</a>
+        @include('admin.partials.form-validate-hostel',['form'=>'validate'])
+
     @endif
+
 @endsection
 
 @section('content')
@@ -87,7 +89,9 @@
                         <div class="col-md-4 col-12">
 
                             <div class="card-body">
-                                <h4 class="mt-3">{{$room->name}} <small></small></h4>
+                                <h4 class="mt-3">{{$room->name}}
+                                    <small> @if($room->isAvailable()) <span class="badge badge-success">Activée</span> @else <span class="badge badge-danger">Désactivée</span> @endif </small>
+                                </h4>
 
                                 <img class="img-fluid pad" style="height: 200px; width: 100%" src="{{$room->front_image}}" alt="Room Image">
 

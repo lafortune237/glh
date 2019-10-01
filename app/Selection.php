@@ -13,11 +13,7 @@ class Selection extends Model
     const MIN_HOURS = 2;
     const MAX_NIGHTS = 30;
 
-    const SECOND_DRIVER_YES = '1';
-    const SECOND_DRIVER_NO = '0';
 
-    const RENTAL_SELECTION = 'rental';
-    const REQUEST_SELECTION = 'request';
 
     const FEE_SERVICES = 3;
 

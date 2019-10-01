@@ -9,6 +9,9 @@ class Hostel extends Model
     const VERIFIED_HOSTEL = '1';
     const UNVERIFIED_HOSTEL = '0';
 
+    const FORWARDED_HOSTEL = '1';
+    const REGULAR_HOSTEL = '0';
+
     protected $table = 'hostels';
 
     protected $fillable = [
@@ -23,6 +26,7 @@ class Hostel extends Model
         'tel1',
         'tel2',
         'verified',
+        'forwarded',
         'nbr_rental',
     ];
 
@@ -104,6 +108,11 @@ class Hostel extends Model
     public function isVerified()
     {
         return $this->verified == Hostel::VERIFIED_HOSTEL;
+    }
+
+    public function isForwarded()
+    {
+        return $this->forwarded == Hostel::FORWARDED_HOSTEL;
     }
 
     public function images()

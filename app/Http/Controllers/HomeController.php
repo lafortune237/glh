@@ -26,9 +26,7 @@ class HomeController extends Controller
     public function index()
     {
         $hostels = Hostel::has('AvailableRooms')
-            ->where(['verified'=>Hostel::VERIFIED_HOSTEL])
-            ->orderBy('nbr_rental','desc')
-            ->take(15)
+            ->where(['verified'=>Hostel::VERIFIED_HOSTEL,'forwarded'=>Hostel::FORWARDED_HOSTEL])
             ->get();
 
         return view('home')->with(['hostels'=>$hostels]);
